@@ -1,21 +1,28 @@
 {
-    "name": "LEIKOR Theme for Ceres",
-    "description": "LEIKOR theme plugin for Ceres",
-    "namespace": "LEIKOR",
-    "author": "Arne Ludwig <arne@leikor.de>",
+    "version": "0.0.1",
+    "name": "LEIKOR",
+    "description": "LEIKOR theme plugin for Ceres.",
+    "author": "Arne Ludwig",
+    "license": "CC-BY-NC-SA-3.0",
+    "email": "admin@leikor.de",
     "keywords": [
         "theme",
         "Ceres",
         "template"
     ],
     "type": "theme",
-    "require": [],
+    "require": [
+        "Ceres"
+    ],
+    "namespace": "LEIKOR",
+    "pluginIcon": "icon_plugin_xs.png",
     "serviceProvider": "LEIKOR\\Providers\\ThemeServiceProvider",
     "dataProviders": [
         {
             "key": "LEIKOR\\Containers\\ThemeContainer",
             "name": "Dark background",
-            "description": "Change the background colour of the Ceres template"
+            "description": "Change the background colour of the Ceres template",
+            "defaultLayoutContainer": "Ceres::Template.Style"
         }
     ]
 }
