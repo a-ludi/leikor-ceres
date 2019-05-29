@@ -23,15 +23,15 @@ class ThemeServiceProvider extends ServiceProvider
      */
     public function boot(Twig $twig, Dispatcher $eventDispatcher)
     {
-        $this->replaceTemplate('IO.tpl.item', 'LEIKOR::Item.SingleItemWrapper');
-        $this->replaceTemplate('tpl.category.item', 'LEIKOR::Item.SingleItemWrapper');
-    }
-
-    private function replaceTemplate(string $ioEvent, string $newTemplate)
-    {
-        $eventDispatcher->listen($ioEvent, function(TemplateContainer $container, $templateData)
+        $eventDispatcher->listen('IO.tpl.item', function(TemplateContainer $container, $templateData)
         {
-            $container->setTemplate($newTemplate);
+            $container->setTemplate('LEIKOR::Item.SingleItemWrapper');
+            return false;
+        }, 0);
+
+        $eventDispatcher->listen('IO.tpl.category.item', function(TemplateContainer $container, $templateData)
+        {
+            $container->setTemplate('LEIKOR::Category.Item.CategoryItem');
             return false;
         }, 0);
     }
