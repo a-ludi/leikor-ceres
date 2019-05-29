@@ -11,36 +11,36 @@ class ThemeServiceProvider extends ServiceProvider
 {
     private static $templateKeyToViewMap =
     [
-        // 'tpl.home'                          => ['Homepage.Homepage',                      GlobalContext::class],
-        // 'tpl.category.content'              => ['Category.Content.CategoryContent',       CategoryContext::class],
-        'tpl.category.item'                 => ['Category.Item.CategoryItem',             CategoryItemContext::class],
-        // 'tpl.category.blog'                 => ['PageDesign.PageDesign',                  GlobalContext::class],
-        // 'tpl.category.container'            => ['PageDesign.PageDesign',                  GlobalContext::class],
-        'tpl.item'                          => ['Item.SingleItemWrapper',                 SingleItemContext::class],
-        // 'tpl.basket'                        => ['Basket.Basket',                          GlobalContext::class],
-        // 'tpl.checkout'                      => ['Checkout.CheckoutView',                  CheckoutContext::class],
-        // 'tpl.checkout.category'             => ['Checkout.CheckoutCategory',              CheckoutContext::class],
-        // 'tpl.my-account'                    => ['MyAccount.MyAccountView',                GlobalContext::class],
-        // 'tpl.my-account.category'           => ['MyAccount.MyAccountCategory',            CategoryContext::class],
-        // 'tpl.confirmation'                  => ['Checkout.OrderConfirmation',             OrderConfirmationContext::class],
-        // 'tpl.login'                         => ['Customer.Login',                         GlobalContext::class],
-        // 'tpl.register'                      => ['Customer.Register',                      GlobalContext::class],
-        // 'tpl.guest'                         => ['Customer.Guest',                         GlobalContext::class],
-        // 'tpl.password-reset'                => ['Customer.ResetPassword',                 PasswordResetContext::class],
-        // 'tpl.change-mail'                   => ['Customer.ChangeMail',                    ChangeMailContext::class],
-        // 'tpl.contact'                       => ['Customer.Contact',                       GlobalContext::class],
-        // 'tpl.search'                        => ['Category.Item.CategoryItem',             ItemSearchContext::class],
-        // 'tpl.wish-list'                     => ['WishList.WishListView',                  ItemWishListContext::class],
-        // 'tpl.order.return'                  => ['OrderReturn.OrderReturnView',            OrderReturnContext::class],
-        // 'tpl.order.return.confirmation'     => ['OrderReturn.OrderReturnConfirmation',    GlobalContext::class],
-        // 'tpl.cancellation-rights'           => ['StaticPages.CancellationRights',         GlobalContext::class],
-        // 'tpl.cancellation-form'             => ['StaticPages.CancellationForm',           GlobalContext::class],
-        // 'tpl.legal-disclosure'              => ['StaticPages.LegalDisclosure',            GlobalContext::class],
-        // 'tpl.privacy-policy'                => ['StaticPages.PrivacyPolicy',              GlobalContext::class],
-        // 'tpl.terms-conditions'              => ['StaticPages.TermsAndConditions',         GlobalContext::class],
-        // 'tpl.item-not-found'                => ['StaticPages.ItemNotFound',               GlobalContext::class],
-        // 'tpl.page-not-found'                => ['StaticPages.PageNotFound',               GlobalContext::class],
-        // 'tpl.newsletter.opt-out'            => ['Newsletter.NewsletterOptOut',            GlobalContext::class]
+        // 'tpl.home'                          => 'Homepage.Homepage',
+        // 'tpl.category.content'              => 'Category.Content.CategoryContent',
+        'tpl.category.item'                 => 'Category.Item.CategoryItem',
+        // 'tpl.category.blog'                 => 'PageDesign.PageDesign',
+        // 'tpl.category.container'            => 'PageDesign.PageDesign',
+        'tpl.item'                          => 'Item.SingleItemWrapper',
+        // 'tpl.basket'                        => 'Basket.Basket',
+        // 'tpl.checkout'                      => 'Checkout.CheckoutView',
+        // 'tpl.checkout.category'             => 'Checkout.CheckoutCategory',
+        // 'tpl.my-account'                    => 'MyAccount.MyAccountView',
+        // 'tpl.my-account.category'           => 'MyAccount.MyAccountCategory',
+        // 'tpl.confirmation'                  => 'Checkout.OrderConfirmation',
+        // 'tpl.login'                         => 'Customer.Login',
+        // 'tpl.register'                      => 'Customer.Register',
+        // 'tpl.guest'                         => 'Customer.Guest',
+        // 'tpl.password-reset'                => 'Customer.ResetPassword',
+        // 'tpl.change-mail'                   => 'Customer.ChangeMail',
+        // 'tpl.contact'                       => 'Customer.Contact',
+        // 'tpl.search'                        => 'Category.Item.CategoryItem',
+        // 'tpl.wish-list'                     => 'WishList.WishListView',
+        // 'tpl.order.return'                  => 'OrderReturn.OrderReturnView',
+        // 'tpl.order.return.confirmation'     => 'OrderReturn.OrderReturnConfirmation',
+        // 'tpl.cancellation-rights'           => 'StaticPages.CancellationRights',
+        // 'tpl.cancellation-form'             => 'StaticPages.CancellationForm',
+        // 'tpl.legal-disclosure'              => 'StaticPages.LegalDisclosure',
+        // 'tpl.privacy-policy'                => 'StaticPages.PrivacyPolicy',
+        // 'tpl.terms-conditions'              => 'StaticPages.TermsAndConditions',
+        // 'tpl.item-not-found'                => 'StaticPages.ItemNotFound',
+        // 'tpl.page-not-found'                => 'StaticPages.PageNotFound',
+        // 'tpl.newsletter.opt-out'            => 'Newsletter.NewsletterOptOut',
     ];
 
     /**
@@ -56,16 +56,23 @@ class ThemeServiceProvider extends ServiceProvider
      */
     public function boot(Twig $twig, Dispatcher $eventDispatcher)
     {
-        $eventDispatcher->listen('IO.tpl.item', function(TemplateContainer $container, $templateData)
-        {
-            $container->setTemplate('LEIKOR::Item.SingleItemWrapper');
-            return false;
-        }, 0);
+        $eventDispatcher->listen('IO.tpl.*', function (TemplateContainer $templateContainer, $templateData) {
+            $this->replaceTemplate($templateContainer);
+        });
+    }
 
-        $eventDispatcher->listen('IO.tpl.home', function(TemplateContainer $container, $templateData)
+    /**
+     * @param TemplateContainer $templateContainer
+     */
+    private function replaceTemplate(TemplateContainer $templateContainer)
+    {
+        $templateEvent  = $templateContainer->getTemplateKey();
+        $template = substr($templateEvent, 4);
+
+        if( array_key_exists($templateEvent, self::$templateKeyToViewMap) )
         {
-            $container->setTemplate('LEIKOR::Category.Item.CategoryItem');
-            return false;
-        }, 0);
+            $templateConfig = self::$templateKeyToViewMap[$templateEvent];
+            $templateContainer->setTemplate( 'LEIKOR::' . $templateConfig );
+        }
     }
 }
