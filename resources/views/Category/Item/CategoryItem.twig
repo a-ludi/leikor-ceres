@@ -5,6 +5,7 @@
 {% set overrideSearchFilters = LayoutContainer.show("Ceres::Search.Filter", facets ) %}
 
 {% block PageBody %}
+    <!-- LEIKOR version -->
 
     {{ component( "LEIKOR::ItemList.Components.CategoryItem") }}
     {{ component( "Ceres::ItemList.Components.Filter.ItemFilterList") }}
@@ -93,7 +94,6 @@
                 <ul class="product-list row grid">
                     {% for item in itemList %}
                         <li class="col-12 col-sm-6 col-md-4 col-lg-{% if category is defined and ceresConfig.header.showNavBars in ["side", "both"] %}4{% else %}3{% endif %}">
-                            <p>Before CategoryItem</p>
                             <category-item
                                 item-data-ref="{{ item.data | json_data }}"
                                 :decimal-count="{{ ceresConfig.item.storeSpecial }}">

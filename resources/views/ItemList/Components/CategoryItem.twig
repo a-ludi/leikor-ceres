@@ -13,10 +13,14 @@
 {% endif %}
 
 <script type="x/template" id="vue-category-item">
+    <!-- LEIKOR version -->
+    {% if services.customer.getContactId() %}
+    <!-- customer unavailable -->
+    {% else %}
+    <!-- customer available -->
+    {% endif %}
     <article class="cmp cmp-product-thumb cmp-product-thumb--grid">
         <div class="thumb-inner" :class="paddingClasses" :style="paddingInlineStyles">
-
-            <p>In CategoryItem</p>
             {% if services.customer.getContactId() %}
                 {{ AddToBasket.printVueComponent( "item", true, false, { ":has-price": "item | hasItemDefaultPrice" } ) }}
             {% else %}
